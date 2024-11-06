@@ -1,13 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  </head>
-  <body>
-    <div id="app">
-      <!-- todo -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geocoin Carrier</title>
+    <link rel="stylesheet" href="/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Geocoin Carrier</h1>
+
+    <!-- Control Panel -->
+    <div id="controlPanel" class="panel">
+        <button id="collect">Collect Coin</button>
+        <button id="deposit">Deposit Coin</button>
+        <button id="resetState">Reset State</button>
     </div>
+
+    <!-- Map Container -->
+    <div id="map"></div>
+
+    <!-- Status/Inventory Panel -->
+    <div id="statusPanel" class="panel">
+        <p>Coins in Inventory: <span id="coinCount">0</span></p>
+    </div>
+
+    <!-- Link to Leaflet JavaScript -->
     <script type="module" src="/src/main.ts"></script>
-  </body>
+</body>
 </html>
