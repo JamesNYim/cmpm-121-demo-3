@@ -27,12 +27,8 @@ leaflet.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
 }).addTo(map);
 
 // Player's position
-<<<<<<< HEAD
-const playerMarker = leaflet.marker(START_LOCATION, { title: "Your position" }).addTo(map);
-=======
 const playerMarker = leaflet.marker(START_LOCATION, { title: "Your position" })
 .addTo(map);
->>>>>>> 2c1e55b (Finished D3.A: Created baseline cache map)
 
 // Track player's coins
 let playerCoins = 0;
