@@ -23,11 +23,20 @@ const map = leaflet.map(document.getElementById("map")!, {
 // Add base layer
 leaflet.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
+<<<<<<< HEAD
   attribution: '&copy; OpenStreetMap contributors',
 }).addTo(map);
 
 // Player's position
 const playerMarker = leaflet.marker(START_LOCATION, { title: "Your position" }).addTo(map);
+=======
+  attribution: "&copy; OpenStreetMap contributors",
+}).addTo(map);
+
+// Player's position
+const playerMarker = leaflet.marker(START_LOCATION, { title: "Your position" })
+  .addTo(map);
+>>>>>>> 9ea5e02 (D3.a Complete)
 
 // Track player's coins
 let playerCoins = 0;
@@ -47,7 +56,11 @@ function spawnCache(i: number, j: number) {
   // Rectangle to represent cache
   const cache = {
     rect: leaflet.rectangle(bounds).addTo(map),
+<<<<<<< HEAD
     coins: Math.floor(Math.random() * 20),  // Each cache has a random number of coins
+=======
+    coins: Math.floor(Math.random() * 20),
+>>>>>>> 9ea5e02 (D3.a Complete)
   };
 
   // Popup interaction
@@ -57,7 +70,11 @@ function spawnCache(i: number, j: number) {
       <div>Cache location [${i}, ${j}]. Coins: <span id="value">${cache.coins}</span></div>
       <button id="collect">Collect</button>
       <button id="deposit">Deposit</button>`;
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 9ea5e02 (D3.a Complete)
     // Button interaction for collecting and depositing:
     popupDiv.querySelector("#collect")!.addEventListener("click", () => {
       if (cache.coins > 0) {
