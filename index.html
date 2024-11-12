@@ -1,31 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geocoin Carrier</title>
-    <link rel="stylesheet" href="/leaflet/dist/leaflet.css" />
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <h1>Geocoin Carrier</h1>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <div id="app">
 
-    <!-- Control Panel -->
-    <div id="controlPanel" class="panel">
-        <button id="collect">Collect Coin</button>
-        <button id="deposit">Deposit Coin</button>
-        <button id="resetState">Reset State</button>
+      <h1>Geocoin Carrier</h1>
+      <div id="map"></div>
+      <div id="inventoryPanel"></div>
+      <div id="controlPanel">        
+        <div id="arrowContainer">
+          <div></div>
+          <button id="north" title="north">↑</button>
+          <div></div>
+          <button id="west" title="west">←</button>
+          <button id="south" title="south">↓</button>
+          <button id="east" title="east">→</button>
+        </div>
+        <div id="actionButtons">
+          <button id="reset" title="reset">Reset</button>
+        </div>
+      </div>
     </div>
-
-    <!-- Map Container -->
-    <div id="map"></div>
-
-    <!-- Status/Inventory Panel -->
-    <div id="statusPanel" class="panel">
-        <p>Coins in Inventory: <span id="coinCount">0</span></p>
-    </div>
-
-    <!-- Link to Leaflet JavaScript -->
     <script type="module" src="/src/main.ts"></script>
-</body>
+  </body>
 </html>
