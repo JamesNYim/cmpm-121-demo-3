@@ -82,7 +82,6 @@ leaflet
   .addTo(map);
 
 // red player icon
-
 const playerMarker = leaflet.marker(OAKES_CLASSROOM_POSITION);
 playerMarker.bindTooltip("You Are Here");
 playerMarker.addTo(map);
@@ -96,6 +95,9 @@ const Keys = {
   reset: document.getElementById("reset")!,
 };
 
+let movementHistory: leaflet.LatLng[] = [];  // Store player's movement coordinates
+let movementPolyline: leaflet.Polyline | null = null;  // Initialize empty polyline
+
 // move functionality
 function movePlayer(direction: string) {
   const currentPosition = playerMarker.getLatLng();
@@ -107,24 +109,28 @@ function movePlayer(direction: string) {
         currentPosition.lat + POSITION_ADJUST,
         currentPosition.lng,
       );
+      updatePlayerPosition(newPosition);
       break;
     case "south":
       newPosition = new leaflet.LatLng(
         currentPosition.lat - POSITION_ADJUST,
         currentPosition.lng,
       );
+      updatePlayerPosition(newPosition);
       break;
     case "west":
       newPosition = new leaflet.LatLng(
         currentPosition.lat,
         currentPosition.lng - POSITION_ADJUST,
       );
+      updatePlayerPosition(newPosition);
       break;
     case "east":
       newPosition = new leaflet.LatLng(
         currentPosition.lat,
         currentPosition.lng + POSITION_ADJUST,
       );
+      updatePlayerPosition(newPosition);
       break;
     default:
       return;
@@ -319,5 +325,21 @@ function populateMap() {
   }
 }
 
+// Function to update player position and render movement path
+function updatePlayerPosition(newPosition: leaflet.LatLng) {
+    
+    // Add new position to movement history
+    movementHistory.push(newPosition);
+    
+    // Update or create the polyline to display the path
+    if (movementPolyline) {
+        movementPolyline.setLatLngs(movementHistory);  // Update existing polyline with new path
+    } else {
+        movementPolyline = leaflet.polyline(movementHistory, { color: 'blue' }).addTo(map);  // Create polyline initially
+    }
+    
+    // Optional: Pan map to follow player movement
+    map.panTo(newPosition);
+}
 populateMap();
 updateCacheVisibility(playerMarker.getLatLng());
