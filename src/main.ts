@@ -15,6 +15,8 @@ const OAKES_CLASSROOM_POSITION = leaflet.latLng(
   36.98949379578401,
   -122.06277128548504,
 );
+const CACHE_SPAWN_GRID_SIZE = 8;
+
 let origin = leaflet.latLng(0, 0); // point at which the markers are anchored
 let globalSerialCounter = 0;
 const collectedCoins: Coin[] = [];
@@ -411,37 +413,49 @@ function clearCachesAndMarkers() {
   caches.clear();
 }
 
-// spawn caches
-function populateMap() {
+
+function prepareForMapPopulation(): void {
   clearCachesAndMarkers();
   origin = playerMarker.getLatLng();
-  const CACHE_SPAWN_GRID_SIZE = 8;
+}
 
-  for (let i = -CACHE_SPAWN_GRID_SIZE; i <= CACHE_SPAWN_GRID_SIZE; i++) {
-    for (let j = -CACHE_SPAWN_GRID_SIZE; j <= CACHE_SPAWN_GRID_SIZE; j++) {
-      const luckValue = luck([origin.lat + i, origin.lng + j].toString());
-      if (luckValue < CACHE_SPAWN_CHANCE) {
+function spawnCachesInGrid(size: number): void {
+  for (let i = -size; i <= size; i++) {
+    for (let j = -size; j <= size; j++) {
+      if (shouldSpawnCache(i, j)) {
         const cache = getOrCreateCache(i, j);
         const cachePosition = getCachePositionRelativeToPlayer(i, j);
-
-        // create coins for the cache
-        const initialCoins = Math.ceil(Math.random() * 5);
-        for (let c = 0; c < initialCoins; c++) {
-          const coin = getOrCreateCoin({ i, j });
-          cache.coins.push(coin);
-        }
-
-        // store the cache in the caches map and cachemarkers map
-        const marker = leaflet.marker(cachePosition).addTo(map);
-        cacheMarkers.set(`${i},${j}`, marker);
-        caches.set(`${i},${j}`, cache);
-
-        console.log(
-          `Cache created at [${i}, ${j}] with ${cache.coins.length} coins.`,
-        );
+        populateCacheWithCoins(cache, i, j);
+        createAndAddMarker(cache, cachePosition);
       }
     }
   }
+}
+
+function shouldSpawnCache(i: number, j: number): boolean {
+  const luckValue = luck([origin.lat + i, origin.lng + j].toString());
+  return luckValue < CACHE_SPAWN_CHANCE;
+}
+
+function populateCacheWithCoins(cache: Cache, i: number, j: number): void {
+  const initialCoins = Math.ceil(Math.random() * 5);
+  for (let c = 0; c < initialCoins; c++) {
+    const coin = getOrCreateCoin({ i, j });
+    cache.coins.push(coin);
+  }
+}
+
+function createAndAddMarker(cache: Cache, cachePosition: leaflet.LatLng): void {
+  const marker = leaflet.marker(cachePosition).addTo(map);
+  cacheMarkers.set(`${cache.cell.i},${cache.cell.j}`, marker);
+  caches.set(`${cache.cell.i},${cache.cell.j}`, cache);
+  console.log(`Cache created at [${cache.cell.i}, ${cache.cell.j}] with ${cache.coins.length} coins.`);
+}
+// spawn caches
+function populateMap() {
+  prepareForMapPopulation();
+  prepareForMapPopulation();
+  spawnCachesInGrid(CACHE_SPAWN_GRID_SIZE);
   updateCacheVisibility(origin);
 }
 
