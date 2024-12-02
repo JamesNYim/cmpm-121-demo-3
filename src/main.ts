@@ -112,53 +112,58 @@ function toggleArrowKeyControls(enabled: boolean) {
   Keys.west.disabled = !enabled;
   Keys.east.disabled = !enabled;
 }
-
-// move functionality
-function movePlayer(direction: string) {
-  const currentPosition = playerMarker.getLatLng();
-  const polyline = leaflet.polyline(
-    [currentPosition],
-    { color: "blue" },
-  ).addTo(map);
-
+function calculateNextPosition(currentPosition: leaflet.LatLng, direction: string): leaflet.LatLng {
   let newPosition: leaflet.LatLng;
-
   switch (direction) {
     case "north":
       newPosition = new leaflet.LatLng(
         currentPosition.lat + POSITION_ADJUST,
         currentPosition.lng,
       );
-      polyline.addLatLng(newPosition);
       break;
     case "south":
       newPosition = new leaflet.LatLng(
         currentPosition.lat - POSITION_ADJUST,
         currentPosition.lng,
       );
-      polyline.addLatLng(newPosition);
       break;
     case "west":
       newPosition = new leaflet.LatLng(
         currentPosition.lat,
         currentPosition.lng - POSITION_ADJUST,
       );
-      polyline.addLatLng(newPosition);
       break;
     case "east":
       newPosition = new leaflet.LatLng(
         currentPosition.lat,
         currentPosition.lng + POSITION_ADJUST,
       );
-      polyline.addLatLng(newPosition);
       break;
     default:
-      return;
+      throw new Error(`Invalid direction: ${direction}`);
   }
+  return newPosition;
+}
 
-  // update the player marker's position and camera
+function updatePolyline(oldPosition: leaflet.LatLng, newPosition: leaflet.LatLng): void {
+  const polyline = leaflet.polyline(
+    [oldPosition],
+    { color: "blue" },
+  ).addTo(map);
+  polyline.addLatLng(newPosition);
+}
+
+function updatePlayerPosition(newPosition: leaflet.LatLng): void {
   playerMarker.setLatLng(newPosition);
   map.panTo(newPosition);
+}
+
+// move functionality
+function movePlayer(direction: string) {
+  const currentPosition = playerMarker.getLatLng();
+  const newPosition = calculateNextPosition(currentPosition, direction);
+  updatePolyline(currentPosition, newPosition);
+  updatePlayerPosition(newPosition);
   updateCacheVisibility(newPosition);
   saveGameState();
 }
